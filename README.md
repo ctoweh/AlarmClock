@@ -1,41 +1,42 @@
+# Script Exaplained 
+
 if [[ -z $1 ]]; then
+# This line starts an if-statement. It checks if the first argument to the script ($1) is empty or not provided.
+
 	echo -e "\n\t Usage: ./Alarm.sh 8h for 8 hours of sleep"
+# If the first argument is empty, this line prints a usage message to the console, explaining how to use the script to set an alarm for a specific duration of sleep.
 	echo -e "\t\t./Alarm.sh 20m for 20 minutes of sleep"
+# This line adds another example to the usage message, demonstrating how to set an alarm for a specific duration in minutes.
 	echo -e "\t\t See man sleep\n"
+# This line adds a reminder to consult the manual (man sleep) for more information on how to use the sleep command.
 	exit 0
+# his line exits the script with a status code of 0, indicating successful execution of the script's purpose (displaying the usage message in this case).
 fi
+# This line marks the end of the if-statement block.
 
-# This script checks if the first argument passed to it is empty. 
-# If it is empty, it prints usage information and exits. 
-# If there is an argument, it continues executing the rest of the script.
-# It uses the echo command to print a message to the standard output.
-# The -e flag enables interpretation of backslash escapes, allowing for formatting. 
-# This line prints a usage message informing the user how to use the script, specifying that they should run ./Alarm.sh followed by a duration in hours or minutes.
-# Another example of how to use the script, specifying that they can use minutes instead of hours by providing a duration followed by 'm'.
-#  Another message directing the user to refer to the manual page (man) for the sleep command, suggesting they can find more information there.
-
-
-
-sleep "$1"; 
-# This line uses the sleep command to pause the execution of the script for the duration specified by the first argument passed to the script ($1). The value of $1 is the duration of sleep specified by the user, either in hours or minutes.
-
+sleep "$1";
+# This line pauses the execution of the script for the duration specified by the first argument ($1). For example, if $1 is "8h", it will sleep for 8 hours.
 figlet "sleep time over"
-# This line uses the figlet command to generate ASCII art text that spells out "sleep time over". figlet is a program that generates text banners in a variety of typefaces. Here, it's used to display a message indicating that the sleep time is over.
+# After the sleep duration is over, this line displays the message "sleep time over" using the figlet command, which creates ASCII art text.
 
 alarm=(
-# This line initializes an array variable named alarm. Arrays in Bash are ordered lists of values. In this case, the array contains the filenames of MP3 files that presumably contain alarm sounds.
-
+# This line defines an array named alarm containing the filenames of different alarm sounds.
 	"alarm1.mp3"
 	"alarm2.mp3"
 	"alarm3.mp3"
 	"alarm4.mp3"
 	"alarm5.mp3"
- # These are the elements of the alarm array. Each element is a string representing the filename of an MP3 file containing an alarm sound. The script uses these filenames to play an alarm sound to wake the user up after the specified sleep duration.
 )
 
 for ((i=0; i<${#alarm[@]}; i++)); do
+# This line starts a for loop that iterates over the elements of the alarm array. It initializes the loop variable i to 0, and the loop continues as long as i is less than the length of the alarm array ${#alarm[@]}.
   figlet -f slant "Wake Up-$((i+1))"
+# Inside the loop, this line uses the figlet command to display the message "Wake Up-" followed by the current value of i incremented by 1. This creates a series of messages like "Wake Up-1", "Wake Up-2", and so on.
   sleep 1; mpv --no-audio-display --no-resume-playback "${alarm[i]}" &
+# After displaying the "Wake Up" message, this line pauses the script execution for 1 second and then plays the corresponding alarm sound specified by the alarm array at index i using the mpv command. The & at the end runs the command in the background.
   sleep 45; killall mpv
+# After playing the alarm sound, this line pauses the script execution for 45 seconds and then terminates any running mpv processes using the killall command. This is to stop the alarm sound after a certain duration.
   sleep 5m;
+# After terminating the mpv process, this line makes the script sleep for 5 minutes before proceeding to the next iteration of the loop.
 done
+# This line marks the end of the for loop block.
